@@ -2,7 +2,7 @@ import re
 import json
 import os
 from sqlalchemy.orm import Session
-from .. import models
+import models
 
 def parse_file(file_id: int, db: Session):
     file_obj = db.query(models.File).filter(models.File.id == file_id).first()

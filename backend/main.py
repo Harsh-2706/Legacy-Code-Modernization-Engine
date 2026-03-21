@@ -7,14 +7,14 @@ import shutil
 import json
 from pydantic import BaseModel
 
-from . import models, database
-from .database import engine, get_db
-from .ingestion import service as ingestion_service
-from .ingestion import git_utils
-from .parser import engine as parser_engine
-from .graph import builder as graph_builder
-from .optimizer import service as optimizer_service
-from .llm import service as llm_service
+import models, database
+from database import engine, get_db
+from ingestion import service as ingestion_service
+from ingestion import git_utils
+from parser import engine as parser_engine
+from graph import builder as graph_builder
+from optimizer import service as optimizer_service
+from llm import service as llm_service
 
 models.Base.metadata.create_all(bind=engine)
 

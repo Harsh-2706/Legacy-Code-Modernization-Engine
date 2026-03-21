@@ -4,8 +4,8 @@ import os
 import requests
 import json
 from sqlalchemy.orm import Session
-from .. import models
-from ..graph import builder
+import models
+from graph import builder
 
 
 def get_scaledown_headers():

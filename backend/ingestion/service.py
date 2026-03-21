@@ -1,6 +1,6 @@
 import os
 from sqlalchemy.orm import Session
-from .. import models
+import models
 
 def scan_repository(repo_id: int, db: Session):
     repo = db.query(models.Repository).filter(models.Repository.id == repo_id).first()
