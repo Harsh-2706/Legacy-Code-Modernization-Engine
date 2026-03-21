@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+sqlalchemy
+networkx
+requests
+gitpython
+python-multipart

@@ -1,0 +1,34 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/*.db
+backend/.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/.env*
+frontend/.vercel
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+err*.txt
+error.json
+gen_result*.txt
+scaledown_test_result*.json
+temp_func*.txt
+sql_app.db
+legacy_modernizer.db
+modernizer.db
+backend/legacy_modernizer.db
+backend/modernizer.db
+backend/sql_app.db
