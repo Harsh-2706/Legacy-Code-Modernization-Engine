@@ -28,7 +28,7 @@ export default function IngestPage() {
         if (!url.endsWith(".git")) url = url + ".git";
 
         response = await fetch(
-          `http://localhost:8000/repo/clone?url=${encodeURIComponent(url)}`,
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/repo/clone?url=${encodeURIComponent(url)}`,
           { method: "POST" }
         );
       } else {
@@ -36,7 +36,7 @@ export default function IngestPage() {
         const formData = new FormData();
         formData.append("file", zipFile);
         response = await fetch(
-          `http://localhost:8000/repo/upload?name=${zipFile.name.replace(".zip", "")}`,
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/repo/upload?name=${zipFile.name.replace(".zip", "")}`,
           { method: "POST", body: formData }
         );
       }

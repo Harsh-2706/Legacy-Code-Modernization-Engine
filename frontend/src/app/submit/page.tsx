@@ -90,7 +90,7 @@ export default function SubmitPage() {
     files.forEach(f => formData.append("files", f));
     
     try {
-      const res = await axios.post("http://localhost:8000/submit/validate", formData);
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/submit/validate`, formData);
       setValidationData(res.data);
     } catch (err) {
       console.error(err);
@@ -123,7 +123,7 @@ export default function SubmitPage() {
         files_analyzed: validationData?.files_analyzed || 0
       };
       
-      await axios.post("http://localhost:8000/submit", payload);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/submit`, payload);
       alert("Submission Locked! Your final score and metrics have been written to the database.");
       router.push("/");
     } catch (err: any) {
