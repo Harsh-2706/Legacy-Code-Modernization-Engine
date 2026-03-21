@@ -1,7 +1,7 @@
 import re
 import networkx as nx
 from sqlalchemy.orm import Session
-from .. import models
+import models
 
 def build_dependency_graph(repo_id: int, db: Session):
     # Get all functions for this repo

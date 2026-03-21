@@ -4,12 +4,12 @@ import os
 import requests
 import json
 from sqlalchemy.orm import Session
-from .. import models
-from ..graph import builder
+import models
+from graph import builder
 
 
 def get_scaledown_headers():
-    api_key = os.environ.get("SCALEDOWN_API_KEY", "7S9dRs9Xjl3fj66ovKZzJ5KwePJrOpeI6Qn6X3Rn")
+    api_key = os.environ.get("SCALEDOWN_API_KEY")
     return {
         "x-api-key": api_key,
         "Content-Type": "application/json"

@@ -2,7 +2,7 @@ import os
 import json
 import time
 from sqlalchemy.orm import Session
-from .. import models
+import models
 
 def generate_modernization(function_id: int, optimized_context: str, db: Session, model_name: str = "gemini-2.0-flash"):
     # Get original function for context

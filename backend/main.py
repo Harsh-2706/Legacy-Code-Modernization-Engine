@@ -7,14 +7,14 @@ import shutil
 import json
 from pydantic import BaseModel
 
-from . import models, database
-from .database import engine, get_db
-from .ingestion import service as ingestion_service
-from .ingestion import git_utils
-from .parser import engine as parser_engine
-from .graph import builder as graph_builder
-from .optimizer import service as optimizer_service
-from .llm import service as llm_service
+import models, database
+from database import engine, get_db
+from ingestion import service as ingestion_service
+from ingestion import git_utils
+from parser import engine as parser_engine
+from graph import builder as graph_builder
+from optimizer import service as optimizer_service
+from llm import service as llm_service
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,7 +22,7 @@ app = FastAPI(title="Legacy Code Modernization Engine")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:3001", "http://127.0.0.1:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
