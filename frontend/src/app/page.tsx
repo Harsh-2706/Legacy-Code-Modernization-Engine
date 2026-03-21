@@ -20,8 +20,8 @@ export default function DashboardHome() {
   const fetchData = async () => {
     try {
       const [sumRes, histRes] = await Promise.all([
-        axios.get("http://localhost:8000/metrics/summary"),
-        axios.get("http://localhost:8000/metrics")
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/metrics/summary`),
+        axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/metrics`)
       ]);
       setMetrics(sumRes.data);
       
@@ -47,7 +47,7 @@ export default function DashboardHome() {
           <button 
             onClick={async () => {
               if (confirm("Are you sure you want to clear all metrics? This will reset the dashboard.")) {
-                await axios.delete("http://localhost:8000/metrics/reset");
+                await axios.delete(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/metrics/reset`);
                 fetchData();
               }
             }}

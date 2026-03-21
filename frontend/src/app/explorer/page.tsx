@@ -26,14 +26,14 @@ export default function ExplorerPage() {
 
   const fetchRepos = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/repositories");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/repositories`);
       setRepositories(res.data);
     } catch (e) { console.error(e); }
   };
 
   const fetchAnalytics = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/analytics/modernization");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/analytics/modernization`);
       setMetrics(res.data.slice(-5)); // Get last 5 for a small trend
     } catch (e) { console.error(e); }
   };
@@ -43,7 +43,7 @@ export default function ExplorerPage() {
     resetFunctionState();
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8000/repo/${repo.id}/functions`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/repo/${repo.id}/functions`);
       setFunctions(res.data);
     } catch (e) { console.error(e); }
     setLoading(false);
@@ -55,7 +55,7 @@ export default function ExplorerPage() {
     setModernization(null);
     setDependencies([]);
     try {
-      const res = await axios.get(`http://localhost:8000/function/${func.id}/dependencies`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/function/${func.id}/dependencies`);
       setDependencies(res.data);
     } catch (e) { console.error(e); }
   };
@@ -65,11 +65,11 @@ export default function ExplorerPage() {
     setLoading(true);
     try {
       // Step 1: Optimize context with Scaledown
-      const optRes = await axios.post(`http://localhost:8000/function/${selectedFunc.id}/optimize?model=${selectedModel}&rate=${compressionRate}`);
+      const optRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/function/${selectedFunc.id}/optimize?model=${selectedModel}&rate=${compressionRate}`);
       setOptimization(optRes.data);
 
       // Step 2: Generate code using compressed context
-      const genRes = await axios.post(`http://localhost:8000/function/${selectedFunc.id}/generate?model=${selectedModel}&rate=${compressionRate}`);
+      const genRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/function/${selectedFunc.id}/generate?model=${selectedModel}&rate=${compressionRate}`);
       // Ensure we extract the modernization object correctly
       setModernization(genRes.data);
       
