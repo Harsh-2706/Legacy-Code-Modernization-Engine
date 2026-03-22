@@ -40,7 +40,7 @@ The project is fully deployed and accessible via the following links:
 *   **Frontend Application:** https://legacy-code-modernization-engine.vercel.app/
 *   **Backend API Docs:** https://legacy-code-modernization-engine.onrender.com/docs
 
-**Note on Backend Availability:** The backend is hosted on a free Render instance and is kept active using a scheduled cronjob that pings the server every 2 minutes. This ensures the API remains awake for consistent demonstration performance.
+**Note on Backend Availability:** The backend is hosted on a free Render instance and is kept active using a scheduled cronjob that pings the server every 2 minutes. We have fundamentally integrated **Supabase (PostgreSQL)** as our persistent database, replacing the default in-memory SQLite. This guarantees that all repository, codebase, and analytics data is permanently preserved across Render's ephemeral instance restarts and completely prevents data loss during OOM-heavy repository analysis.
 
 ### Verification Steps
 1.  Navigate to the Frontend Application link.
@@ -53,6 +53,7 @@ The project is fully deployed and accessible via the following links:
 
 ## Technical Stack
 *   **Backend:** Python 3.10+, FastAPI, SQLAlchemy, GitPython
+*   **Database:** Supabase (PostgreSQL) for reliable persistent storage
 *   **Frontend:** Next.js 14, React, Framer Motion, Recharts, Tailwind CSS
 *   **APIs:** Scaledown, Google AI, Groq, OpenAI
 
