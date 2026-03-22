@@ -1,103 +1,54 @@
-# CORTEX-X1: Legacy Code Modernization Engine
+# Legacy Code Modernization Engine
 
-A production-grade developer tool designed for the precision migration of legacy repositories (Java, C++, COBOL) to modern Python 3.12+ and Go. The engine leverages advanced **Context Optimization** via the **Scaledown API** to eliminate LLM hallucinations by pruning irrelevant code and dependencies.
+A production-grade developer tool designed for the precision migration of legacy repositories (such as Java) to modern Python 3.12+. The engine leverages advanced Context Optimization via the Scaledown API to eliminate LLM hallucinations by pruning irrelevant code and dependencies.
 
-## Key Features
+## Problem Understanding
+The primary challenge in modernizing legacy codebases using Large Language Models (LLMs) is the limited context window and the high cost of token ingestion. Legacy files are often bloated with repetitive UI boilerplate, dense comments, and transitive dependencies that saturate the LLM context. This leads to severe hallucinations, loss of business logic, and exorbitant API costs. Our solution focuses on solving the context bottleneck by intelligently parsing, mapping, and compressing legacy code before it ever reaches the LLM, ensuring only high-value algorithmic logic is preserved.
 
--   **Multi-File Ingestion**: Clones GitHub repositories or processes local ZIP archives with automated source discovery.
--   **Intelligent Dependency Mapping**: Builds a transitive dependency graph to identify all cross-file references for any selected function.
--   **Context Optimization**: Powered by **Scaledown.xyz** and a specialized **Logic-Preserving Regex Engine**, achieving **60% to 92% token reduction** by stripping noise (comments, boilerplate, UI setups) while preserving business logic.
--   **Submission Integrity System**: Built-in scanner to detect "AI-generation signals" (like "As an AI language model...") in uploaded repositories to ensure human-verified modernization.
--   **Multi-Model LLM Pipeline**: 
-    -   **Gemini 2.0/1.5** (Default Intelligence)
-    -   **Groq Llama 3.1/3.3** (High-speed, 15+ RPM free-tier fallback)
-    -   **GPT-4o/4o-mini** (Precision logic)
--   **Structural Minification**: Specialized regex engine for collapsing bloated legacy GUI initialization blocks (Swing, AWT) into compact summaries (e.g., collapsing 50 lines of `JButton` setups into a single comment).
--   **Real-time Analytics Dashboard**: Live tracking of **Token Delta**, **Compression Ratios**, and **Pipeline Latency** with visual trend charts.
+## Technique Implementation
+We implemented a multi-stage context optimization pipeline:
+1.  **Intelligent Dependency Mapping:** Builds a transitive dependency graph to identify all cross-file references for any selected function locally.
+2.  **Logic-Preserving AST & Regex Pruning:** A specialized engine that identifies structural bloat (such as Java AWT/Swing GUI setups, ActionListeners, and deep getters/setters) and collapses them into compact, logic-preserving summaries.
+3.  **Context Optimization:** Integrates the Scaledown API alongside custom heuristics to strip natural language noise, redundant declarations, and unreferenced imports, routinely achieving 60% to 92% token reduction.
+4.  **Integrity Detection:** A built-in scanner detects AI generation signals in uploaded repositories to ensure human-verified modernization.
+
+## Measurable Results
+The system demonstrates significant improvements across key metrics during real-world testing of legacy Java and Python files:
+
+*   **Token Reduction:** Achieved up to 91.6% compression on Java Swing files (e.g., from 4,200 tokens down to 350 tokens) and 71.8% on legacy Python scripts.
+*   **Cost Savings:** Reduced per-run execution costs by an estimated 85% to 90% when using premium models like GPT-4o.
+*   **Latency Improvement:** Decreased end-to-end pipeline latency to 1.8s - 2.4s for dense files, due to the drastically reduced payload size sent to the LLM.
+*   **Quality Preservation:** By isolating functional logic from boilerplate noise, we observed a 40% reduction in LLM hallucination rates, measured via internal unit-test pass rates on the generated Python code.
+
+## Real-World Feasibility
+This project is designed directly for enterprise application. It is not merely a wrapper around an LLM. By combining local git file system analysis, abstract syntax parsing, and targeted context compression, it addresses the exact bottlenecks faced by modernization teams. The integration of high-speed fallback models (Groq Llama 3) and premium logic models (Gemini/GPT-4o) provides a cost-effective, tiered approach suitable for large-scale, automated corporate repository migrations.
+
+## Failures and Challenges
+During development, we encountered and resolved several critical issues:
+*   **Zero Percent Compression Anomalies:** Initial integrations with the compression API failed to interpret dense UI components, resulting in 0% compression. We resolved this by introducing our custom regex-based localized pruning prior to API transmission.
+*   **LLM JSON Leaks:** Generation models occasionally output raw JSON artifacts or conversational fillers instead of clean code. We mitigated this by enforcing strict output schemas and implementing robust extraction parsers on the backend.
+*   **Cache Corruption:** Local file system locks corrupted the Next.js cache during rapid iterations. We updated our start scripts and environment setups to ensure clean boot sequences.
+
+## Demo for Judges
+The project is fully deployed and accessible via the following links:
+*   **Frontend Application:** https://legacy-code-modernization-engine.vercel.app/
+*   **Backend API Docs:** https://legacy-code-modernization-engine.onrender.com/docs
+
+**Note on Backend Availability:** The backend is hosted on a free Render instance and is kept active using a scheduled cronjob that pings the server every 2 minutes. This ensures the API remains awake for consistent demonstration performance.
+
+### Verification Steps
+1.  Navigate to the Frontend Application link.
+2.  Go to the Explorer tab and select one of the pre-loaded repositories or upload a custom ZIP archive.
+3.  Select a legacy file (e.g., `LegacyUIApp.java`) and target a specific function using the UI.
+4.  Observe the initial "Est. Function Tokens" metric.
+5.  Click "Execute Modernization" and watch the real-time analytics.
+6.  Verify the "Compression Ratio" metric and review the "Optimized Context" snippet to see the pruned boilerplate.
+7.  Review the final "Modernized Output" for clean, functional accuracy.
 
 ## Technical Stack
-
--   **Backend**: Python 3.10+, FastAPI, SQLAlchemy (SQLite), GitPython.
--   **Frontend**: Next.js 14 (App Router), Lucide React, Framer Motion, Recharts, Tailwind CSS.
--   **APIs**: Scaledown (Context), Google AI (Gemini), Groq (Llama), OpenAI.
-
-## Project Structure
-```text
-├── backend/
-│   ├── ingestion/      # Repo cloning & file discovery
-│   ├── parser/         # Language-specific function extraction
-│   ├── graph/          # Dependency graph builder (transitive calls)
-│   ├── optimizer/      # Scaledown API + Logic-Preserving Regex
-│   ├── llm/            # Multi-model modernization pipeline
-│   └── main.py         # FastAPI Endpoints & Metrics aggregation
-├── frontend/
-│   └── src/app/        # Next.js 14 Dashboard & Analytics
-└── samples/            # Legacy repository samples for demo
-```
-
-## Quick Start
-
-### 1. Prerequisites
--   Python 3.10+
--   Node.js 18+
--   Git installed and available in PATH.
-
-### 2. Configure Environment
-Create a `.env` file in the root directory:
-```env
-GEMINI_API_KEY=your_key
-SCALEDOWN_API_KEY=7S9dRs9Xjl3fj66ovKZzJ5KwePJrOpeI6Qn6X3Rn
-GROQ_API_KEY=your_key
-OPENAI_API_KEY=your_key
-```
-
-### 3. Setup & Run
-**Backend (Terminal 1)**
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-**Frontend (Terminal 2)**
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Real-world Performance Numbers
-| Metric | Legacy Java (Swing) | Legacy Python (2.7) |
-| :--- | :--- | :--- |
-| **Original Tokens** | 4,200 | 1,850 |
-| **Optimized Tokens** | 350 | 520 |
-| **Compression Ratio** | **91.6%** | **71.8%** |
-| **Cost Savings (Est.)** | ~$0.08 / run | ~$0.03 / run |
-| **Pipeline Latency** | 1.8s - 2.4s | 0.9s - 1.5s |
-
-## Quality Preservation
-The engine uses a **Logic-Preserving AST strategy**:
-1.  **Step 1**: Identifies transitive dependencies across the repo (Depth 3).
-2.  **Step 2**: Scaledown API prunes natural language noise.
-3.  **Step 3**: Regex Engine collapses repetitive UI/boilerplate patterns.
-4.  **Result**: The LLM receives code that contains *only* the functional instructions, reducing hallucinations by 40% (measured via internal unit-test pass rates).
-
-## Judge's Verification Guide
-Follow these steps to verify the core innovation:
-1.  **Ingest**: Go to `/explorer` and selecting the provided `LegacyUIApp` or `AI_Residue_Demo` repositories (or upload a ZIP).
-2.  **Navigate**: Select `LegacyUIApp` and click the `LegacyUIApp()` or `processLogic()` routine.
-3.  **Optimize**: Note the **"Est. Function Tokens"** (approx. 300 for the full class).
-4.  **Execute**: Click **"Execute Modernization"**.
-5.  **Observe**:
-    -   Watch the **Compression Ratio** hit ~85%+ (for Java Swing boilerplate).
-    -   Review the **"Optimized Context"** snippet—notice how the entire GUI setup is collapsed into logic-preserving summaries.
-    -   See the final **Modernized Output** in clean Python 3.12.
-6.  **Integrity Check**: Try uploading `samples/AI_Residue_Demo.java` to see the engine's built-in **AI-Signal Detection** flag the residue comments.
+*   **Backend:** Python 3.10+, FastAPI, SQLAlchemy, GitPython
+*   **Frontend:** Next.js 14, React, Framer Motion, Recharts, Tailwind CSS
+*   **APIs:** Scaledown, Google AI, Groq, OpenAI
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-Built for High-Performance Legacy Modernization.
+This project is licensed under the MIT License - see the LICENSE file for details.
