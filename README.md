@@ -23,11 +23,17 @@ The system demonstrates significant improvements across key metrics during real-
 ## Real-World Feasibility
 This project is designed directly for enterprise application. It is not merely a wrapper around an LLM. By combining local git file system analysis, abstract syntax parsing, and targeted context compression, it addresses the exact bottlenecks faced by modernization teams. The integration of high-speed fallback models (Groq Llama 3) and premium logic models (Gemini/GPT-4o) provides a cost-effective, tiered approach suitable for large-scale, automated corporate repository migrations.
 
-## Failures and Challenges
-During development, we encountered and resolved several critical issues:
-*   **Zero Percent Compression Anomalies:** Initial integrations with the compression API failed to interpret dense UI components, resulting in 0% compression. We resolved this by introducing our custom regex-based localized pruning prior to API transmission.
-*   **LLM JSON Leaks:** Generation models occasionally output raw JSON artifacts or conversational fillers instead of clean code. We mitigated this by enforcing strict output schemas and implementing robust extraction parsers on the backend.
-*   **Cache Corruption:** Local file system locks corrupted the Next.js cache during rapid iterations. We updated our start scripts and environment setups to ensure clean boot sequences.
+## Main Problem Statements
+*   **Context Compression Failures:** The initial context compression logic completely failed when processing dense, UI-heavy legacy files (such as Java Swing/AWT), resulting in a 0% compression ratio. Generic token reduction algorithms could not identify or appropriately strip domain-specific boilerplate.
+*   **LLM Output Leaks & Formatting Errors:** The text parsing logic designed to handle the LLM's response was too brittle. As a result, the modernization engine frequently leaked raw JSON artifacts, conversational fillers, and incorrect markdown formatting into the final output instead of capturing purely modernized Python code.
+
+## What We Learned
+*   **Domain-Specific Optimization is Mandatory:** We learned that relying on basic summarization isn't enough for legacy code translation. Achieving high compression ratios requires language-aware heuristics—specifically, aggressively targeting and stripping repetitive patterns, event listeners, and UI layout declarations before sending the context payload to the LLM.
+*   **Trusting LLM Formatting is Risky:** When integrating generation models into automated backend pipelines, you cannot expect 100% adherence to formatting instructions. Implementing robust regex extractors or enforcing strict JSON schemas at the API level is non-negotiable to ensure the database and frontend only receive clean, precise code blocks.
+
+## What We Would Do Differently
+*   **Implement AST Parsing from Day One:** Rather than relying on string manipulation or general-purpose APIs for initial context reduction, we would build a dedicated Abstract Syntax Tree (AST) parsing pipeline early on. This would allow the engine to surgically identify and remove non-essential logic nodes with absolute precision.
+*   **Automated LLM Output Validation:** We would engineer a strict validation layer that immediately evaluates LLM responses against a predefined code schema. This safety net would actively catch malformed structures or "JSON leaks," triggering an automatic retry sequence to prevent corrupted data from ever reaching the end system.
 
 ## Demo for Judges
 The project is fully deployed and accessible via the following links:
