@@ -3,7 +3,9 @@
 A production-grade developer tool designed for the precision migration of legacy repositories (such as Java) to modern Python 3.12+. The engine leverages advanced Context Optimization via the Scaledown API to eliminate LLM hallucinations by pruning irrelevant code and dependencies.
 
 ## Problem Understanding
-The primary challenge in modernizing legacy codebases using Large Language Models (LLMs) is the limited context window and the high cost of token ingestion. Legacy files are often bloated with repetitive UI boilerplate, dense comments, and transitive dependencies that saturate the LLM context. This leads to severe hallucinations, loss of business logic, and exorbitant API costs. Our solution focuses on solving the context bottleneck by intelligently parsing, mapping, and compressing legacy code before it ever reaches the LLM, ensuring only high-value algorithmic logic is preserved.
+The core difficulty in modernizing legacy code with Large Language Models (LLMs) lies in their limited context capacity and the high cost of processing large inputs. Legacy codebases are often cluttered with repetitive UI boilerplate, excessive comments, and deeply nested dependencies, all of which consume valuable context space without adding meaningful insight. As a result, LLMs struggle to retain critical business logic, leading to hallucinations and inefficient outputs.
+
+To address this, our approach tackles the problem at its source by preprocessing the code—intelligently parsing, mapping, and compressing it before it reaches the model. This ensures that only the most relevant, high-value algorithmic logic is preserved, reducing noise, lowering costs, and significantly improving the accuracy of generated results.
 
 ## Technique Implementation
 We implemented a multi-stage context optimization pipeline:
@@ -33,6 +35,7 @@ This project is designed directly for enterprise application. It is not merely a
 
 ## What We Would Do Differently
 *   **Implement AST Parsing from Day One:** Rather than relying on string manipulation or general-purpose APIs for initial context reduction, we would build a dedicated Abstract Syntax Tree (AST) parsing pipeline early on. This would allow the engine to surgically identify and remove non-essential logic nodes with absolute precision.
+  
 *   **Automated LLM Output Validation:** We would engineer a strict validation layer that immediately evaluates LLM responses against a predefined code schema. This safety net would actively catch malformed structures or "JSON leaks," triggering an automatic retry sequence to prevent corrupted data from ever reaching the end system.
 
 ## Demo for Judges
